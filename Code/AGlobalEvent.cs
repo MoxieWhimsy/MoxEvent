@@ -16,7 +16,7 @@ namespace Mox.Events
 			}
 		}
 
-		internal override void RegisterListener(IGameEventListener<T> listener)
+		internal override void Register(IGameEventListener<T> listener)
 		{
 			if (!eventListeners.Contains(listener))
 			{
@@ -24,7 +24,7 @@ namespace Mox.Events
 			}
 		}
 
-		internal override void UnregisterListener(IGameEventListener<T> listener)
+		internal override void Unregister(IGameEventListener<T> listener)
 		{
 			if (eventListeners.Contains(listener))
 			{

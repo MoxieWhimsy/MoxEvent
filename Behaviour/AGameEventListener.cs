@@ -15,14 +15,14 @@ namespace Mox.Events
 		{
 			if (gameEvent == null) return;
 
-			GameEvent.RegisterListener(this);
+			GameEvent.Register(this);
 		}
 
 		private void OnDisable()
 		{
 			if (gameEvent == null) return;
 
-			GameEvent.UnregisterListener(this);
+			GameEvent.Unregister(this);
 		}
 
 		public void OnEventRaised(T item)
