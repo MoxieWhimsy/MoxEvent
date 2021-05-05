@@ -25,7 +25,7 @@ namespace Mox.Events
 			GameEvent.Unregister(this);
 		}
 
-		public void OnEventRaised(T item)
+		public void OnEventRaised(AGameEvent<T> gameEvent, T item)
 		{
 			if (unityEventResponse == null) return;
 

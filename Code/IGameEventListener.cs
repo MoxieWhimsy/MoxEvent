@@ -2,6 +2,6 @@
 {
 	public interface IGameEventListener<T>
 	{
-		void OnEventRaised(T item);
+		void OnEventRaised(AGameEvent<T> gameEvent, T item);
 	}
 }
