@@ -1,11 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
+#if ODIN_INSPECTOR
+using Sirenix.OdinInspector;
+#endif
 
 namespace Mox.Events
 {
 	public abstract class AGlobalEvent<T> : AGameEvent<T>
 	{
+		#if ODIN_INSPECTOR
+		[ShowInInspector, ReadOnly]
+		#endif
 		private readonly List<IGameEventListener<T>> eventListeners = new List<IGameEventListener<T>>();
 
 		public override void Raise(T item)
