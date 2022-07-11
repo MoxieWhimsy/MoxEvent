@@ -1,6 +1,7 @@
 {
     "name": "mox.events",
-    "displayName": "Events (by Mox)",
+    "displayName": "Events",
+    "author": { "name" : "Paul Ping Kohler" },
     "version": "0.4.1",
     "unity": "2018.3",
     "description": "Mox Events is an implementation of asset events.",
