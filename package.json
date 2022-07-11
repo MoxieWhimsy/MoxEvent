@@ -1,0 +1,10 @@
+{
+    "name": "mox.events",
+    "displayName": "Events (by Mox)",
+    "version": "0.4.1",
+    "unity": "2018.3",
+    "description": "Mox Events is an implementation of asset events.",
+    "keywords": [
+    ],
+    "category": "Unity"
+}
