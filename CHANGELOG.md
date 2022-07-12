@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added 
++ package.json tells the package manager about Events.
++ Runtime Assembly Definition will speed up compilation when using as a package.
+
+### Refactored
++ Make Runtime folder and move runtime code into it.
+
 ## [0.4.1] - 2021-12-09
 ### Changed
 + Global events will display a readonly list of listeners in the inspector, if Odin Inspector is installed and active.
