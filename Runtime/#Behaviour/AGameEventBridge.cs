@@ -1,10 +1,10 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
 
 namespace Mox.Events
 {
-	public abstract class AGameEventBridge<T, TE> : MonoBehaviour, IGameEventListener<T> where TE : AGameEvent<T>
+	public abstract class AGameEventBridge<T, TE> : MonoBehaviour, IReceiveGameEvents, IGameEventListener<T> where TE : AGameEvent<T>
 	{
 		[FormerlySerializedAs("gameEvent")] [SerializeField]
 		private TE _gameEvent;
@@ -29,12 +29,14 @@ namespace Mox.Events
 
 		public void OnEventRaised(AGameEvent<T> gameEvent, T item)
 		{
+			if (!_gameEvent || !gameEvent || _gameEvent != gameEvent) return;
 			_unityEventResponse?.Invoke(item);
 		}
 
-		public void Receive(AGameEvent<T> gameEvent, T item)
+		public void Receive(AGameEvent gameEvent, object item)
 		{
-			_unityEventResponse?.Invoke(item);
+			if (!_gameEvent || !gameEvent || _gameEvent != gameEvent) return;
+			_unityEventResponse?.Invoke(item is T parameter ? parameter : default);
 		}
 	}
 }

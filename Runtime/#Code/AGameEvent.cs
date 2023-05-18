@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Mox.Events
@@ -9,7 +9,7 @@ namespace Mox.Events
 	
 	public abstract class AGameEvent<T> : AGameEvent
 	{
-		private readonly List<IGameEventListener<T>> _subscribers = new ();
+		private readonly List<IReceiveGameEvents> _subscribers = new ();
 
 		public void Broadcast(T item = default) => SendInternal(item, _subscribers.ToArray());
 
@@ -18,25 +18,25 @@ namespace Mox.Events
 		{
 			for (int i = _subscribers.Count - 1; i >= 0; i--)
 			{
-				_subscribers[i].OnEventRaised(this, item);
+				_subscribers[i].Receive(this, item);
 			}
 		}
 
-		public void Send(T item, params IGameEventListener<T>[] receivers) => SendInternal(item, receivers);
+		public void Send(T item, params IReceiveGameEvents[] receivers) => SendInternal(item, receivers);
 
 		[System.Obsolete]
-		public void Register(IGameEventListener<T> receiver)
-			=> SubscribeInternal(receiver);
+		public void Register(IGameEventListener<T> listener)
+			=> SubscribeInternal(listener is IReceiveGameEvents receiver ? receiver : null);
 
-		public void Subscribe(IGameEventListener<T> receiver) => SubscribeInternal(receiver);
+		public void Subscribe(IReceiveGameEvents receiver) => SubscribeInternal(receiver);
 
 		[System.Obsolete]
-		public void Unregister(IGameEventListener<T> receiver)
-			=> UnsubscribeInternal(receiver);
-		public void Unsubscribe(IGameEventListener<T> receiver)
+		public void Unregister(IGameEventListener<T> listener)
+			=> UnsubscribeInternal(listener is IReceiveGameEvents receiver ? receiver : null);
+		public void Unsubscribe(IReceiveGameEvents receiver)
 			=> UnsubscribeInternal(receiver);
 		
-		protected void SendInternal(T item = default, params IGameEventListener<T>[] receivers)
+		protected void SendInternal(T item = default, params IReceiveGameEvents[] receivers)
 		{
 			for (var i = receivers.Length - 1; i >= 0; i--)
 			{
@@ -44,13 +44,13 @@ namespace Mox.Events
 			}
 		}
 
-		private void SubscribeInternal(IGameEventListener<T> receiver)
+		private void SubscribeInternal(IReceiveGameEvents receiver)
 		{
 			if (_subscribers.Contains(receiver)) return;
 			_subscribers.Add(receiver);
 		}
 
-		private void UnsubscribeInternal(params IGameEventListener<T>[] receivers)
+		private void UnsubscribeInternal(params IReceiveGameEvents[] receivers)
 		{
 			foreach (var receiver in receivers)
 			{
