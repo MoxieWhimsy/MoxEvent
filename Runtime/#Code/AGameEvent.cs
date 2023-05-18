@@ -3,7 +3,11 @@ using UnityEngine;
 
 namespace Mox.Events
 {
-	public abstract class AGameEvent<T> : ScriptableObject
+	public abstract class AGameEvent : ScriptableObject
+	{
+	}
+	
+	public abstract class AGameEvent<T> : AGameEvent
 	{
 		private readonly List<IGameEventListener<T>> _subscribers = new ();
 
