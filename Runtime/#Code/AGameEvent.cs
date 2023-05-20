@@ -16,7 +16,7 @@ namespace Mox.Events
 		[System.Obsolete]
 		public void Raise(T item)
 		{
-			for (int i = _subscribers.Count - 1; i >= 0; i--)
+			for (var i = _subscribers.Count - 1; i >= 0; i--)
 			{
 				_subscribers[i].Receive(this, item);
 			}
@@ -24,9 +24,15 @@ namespace Mox.Events
 
 		public void Send(T item, params IReceiveGameEvents[] receivers) => SendInternal(item, receivers);
 
-		[System.Obsolete]
+		[System.Obsolete("refactor to use Subscribe instead")]
 		public void Register(IGameEventListener<T> listener)
-			=> SubscribeInternal(listener is IReceiveGameEvents receiver ? receiver : null);
+		{
+			if (listener is not IReceiveGameEvents receiver)
+			{
+				Debug.LogError($"register failed", this);
+			}
+			else SubscribeInternal(receiver);
+		}
 
 		public void Subscribe(IReceiveGameEvents receiver) => SubscribeInternal(receiver);
 
