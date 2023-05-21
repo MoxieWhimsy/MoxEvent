@@ -7,6 +7,9 @@ namespace Mox.Events
 	public abstract class AGameEvent : ScriptableObject
 	{
 		protected readonly List<IReceiveGameEvents> _subscribers = new ();
+		
+		public void Broadcast() => SendInternal(receivers: _subscribers.ToArray());
+		public void Send(params IReceiveGameEvents[] receivers) => SendInternal(receivers: receivers);
 		public void Subscribe(IReceiveGameEvents receiver) => SubscribeInternal(receiver);
 
 		public void Unsubscribe(IReceiveGameEvents receiver)
@@ -55,7 +58,7 @@ namespace Mox.Events
 	
 	public abstract class AGameEvent<T> : AGameEvent
 	{
-		public void Broadcast(T item = default) => SendInternal(item, typeof(T), _subscribers.ToArray());
+		public void Broadcast(T item) => SendInternal(item, typeof(T), _subscribers.ToArray());
 
 		[System.Obsolete("Use Broadcast instead of legacy Raise, or Send for local events")]
 		public void Raise(T item)
