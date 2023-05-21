@@ -27,7 +27,17 @@ namespace Mox.Events
 				gameEvent.UnsubscribeInternal(receiver);
 			}
 		}
-		
+
+		protected void SendInternal(object item = default, System.Type type = default,
+			params IReceiveGameEvents[] receivers)
+		{
+			if (type != default && item is not null && item.GetType() != type) return;
+			for (var i = receivers.Length - 1; i >= 0; i--)
+			{
+				receivers[i].Receive(this, item);
+			}
+		}
+
 		protected void SubscribeInternal(IReceiveGameEvents receiver)
 		{
 			if (_subscribers.Contains(receiver)) return;
@@ -45,13 +55,13 @@ namespace Mox.Events
 	
 	public abstract class AGameEvent<T> : AGameEvent
 	{
-		public void Broadcast(T item = default) => SendInternal(item, _subscribers.ToArray());
+		public void Broadcast(T item = default) => SendInternal(item, typeof(T), _subscribers.ToArray());
 
 		[System.Obsolete]
 		public void Raise(T item)
-			=> SendInternal(item, _subscribers.ToArray());
+			=> SendInternal(item, typeof(T), _subscribers.ToArray());
 		
-		public void Send(T item, params IReceiveGameEvents[] receivers) => SendInternal(item, receivers);
+		public void Send(T item, params IReceiveGameEvents[] receivers) => SendInternal(item, typeof(T), receivers);
 
 		[System.Obsolete("refactor to use Subscribe instead")]
 		public void Register(IGameEventListener<T> listener)
@@ -68,12 +78,5 @@ namespace Mox.Events
 		public void Unregister(IGameEventListener<T> listener)
 			=> UnsubscribeInternal(listener is IReceiveGameEvents receiver ? receiver : null);
 		
-		protected void SendInternal(T item = default, params IReceiveGameEvents[] receivers)
-		{
-			for (var i = receivers.Length - 1; i >= 0; i--)
-			{
-				receivers[i].Receive(this, item);
-			}
-		}
 	}
 }
