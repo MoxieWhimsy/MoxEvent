@@ -57,26 +57,31 @@ namespace Mox.Events
 	{
 		public void Broadcast(T item = default) => SendInternal(item, typeof(T), _subscribers.ToArray());
 
-		[System.Obsolete]
+		[System.Obsolete("Use Broadcast instead of legacy Raise, or Send for local events")]
 		public void Raise(T item)
 			=> SendInternal(item, typeof(T), _subscribers.ToArray());
 		
 		public void Send(T item, params IReceiveGameEvents[] receivers) => SendInternal(item, typeof(T), receivers);
 
-		[System.Obsolete("refactor to use Subscribe instead")]
+		[System.Obsolete("refactor to use Subscribe instead", true)]
 		public void Register(IGameEventListener<T> listener)
 		{
 			if (listener is not IReceiveGameEvents receiver)
 			{
-				Debug.LogError($"register failed", this);
+				Debug.LogError($"{nameof(Register)} failed. Please transition to {nameof(Subscribe)}.", this);
 			}
 			else SubscribeInternal(receiver);
 		}
 
 		
-		[System.Obsolete]
+		[System.Obsolete("refactor to use Unsubscribe instead", true)]
 		public void Unregister(IGameEventListener<T> listener)
-			=> UnsubscribeInternal(listener is IReceiveGameEvents receiver ? receiver : null);
-		
+		{
+			if (listener is not IReceiveGameEvents receiver)
+			{
+				Debug.LogError($"{nameof(Unregister)} failed. Please transition to {nameof(Unsubscribe)}.", this);
+			}
+			else UnsubscribeInternal(receiver);
+		}
 	}
 }
