@@ -47,9 +47,6 @@ namespace Mox.Events
 	[System.Obsolete]
 	public abstract class AGameState<T> : ScriptableObject
 	{
-		[SerializeField]
-		List<Transition<T>> _transitions = new List<Transition<T>>();
-
 		[System.Obsolete]
 		internal virtual void OnExit(IGameEventListener<T> context) { }
 
@@ -59,38 +56,16 @@ namespace Mox.Events
 		[System.Obsolete]
 		internal void RegisterTransitions(IGameEventListener<T> context)
 		{
-			_transitions.ForEach((transition) => {
-				if (transition == null || transition.trigger == null || transition.target == null)
-					return;
-
-				transition.trigger.Register(context);
-			});
 		}
 
 		[System.Obsolete]
 		internal void UnregisterTransitions(IGameEventListener<T> context)
 		{
-			_transitions.ForEach((transition) =>
-			{
-				if (transition == null || transition.trigger == null || transition.target == null)
-					return;
-
-				transition.trigger.Unregister(context);
-			});
 		}
 
 		[System.Obsolete]
 		internal bool TryGetTransition(AGameEvent<T> triggerEvent, out Transition<T> transition)
 		{
-			foreach (var item in _transitions)
-			{
-				if (item.trigger == triggerEvent)
-				{
-					transition = item;
-					return true;
-				}
-			}
-
 			transition = null;
 			return false;
 		}
