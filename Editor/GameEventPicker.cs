@@ -7,27 +7,27 @@ using UnityEngine;
 
 namespace Mox.Events.Editor
 {
-    [CustomPropertyDrawer(typeof(AGameEvent))]
+    [CustomPropertyDrawer(typeof(AGameEvent), false)]
     public class GameEventPicker : PropertyDrawer
     {
-        private const int _backButtonWidth = 40;
-        private const int _searchButtonWidth = 50;
+        private const int BackButtonWidth = 40;
+        private const int SearchButtonWidth = 50;
         private static System.Type[] s_gameEventTypes = { };
         private readonly List<AGameEvent> _gameEvents = new();
         private int _typeIndex = 0;
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            if (property.depth == 0) position = EditorGUI.PrefixLabel(position, label);
+            position = EditorGUI.PrefixLabel(position, label);
             var indent = EditorGUI.indentLevel;
             EditorGUI.indentLevel = 0;
             
             var lineHeight = position.height;
-            var typeRect = new Rect(position.x, position.y, position.width - _searchButtonWidth, lineHeight);
-            var searchButtonRect = new Rect(position.x + typeRect.width, position.y, _searchButtonWidth, lineHeight);
+            var typeRect = new Rect(position.x, position.y, position.width - SearchButtonWidth, lineHeight);
+            var searchButtonRect = new Rect(position.x + typeRect.width, position.y, SearchButtonWidth, lineHeight);
             
-            var assetsRect = new Rect(position.x, position.y, position.width - _backButtonWidth, lineHeight);
-            var backButtonRect = new Rect(position.x + position.width - _backButtonWidth, position.y, _backButtonWidth, lineHeight);
+            var assetsRect = new Rect(position.x, position.y, position.width - BackButtonWidth, lineHeight);
+            var backButtonRect = new Rect(position.x + position.width - BackButtonWidth, position.y, BackButtonWidth, lineHeight);
             var eventTypeName = s_gameEventTypes[_typeIndex].Name;
             var objectValue = property.objectReferenceValue;
             var eventType = objectValue ? objectValue.GetType() : s_gameEventTypes[_typeIndex];
