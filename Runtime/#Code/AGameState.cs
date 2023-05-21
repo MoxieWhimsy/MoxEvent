@@ -14,7 +14,7 @@ namespace Mox.Events
 		{
 			if (!HasValidComponents(components)) return;
 			if (components.Length > 0 && components[0] is IHandleTransitions handler)
-				handler.Register(_transitions.Where(tr=>tr.TriggeringEvent && tr.TargetState));
+				handler.Register(_transitions.Where(tr => tr.HasTargetAndTrigger));
 			InternalEnter(components);
 		}
 
@@ -22,26 +22,28 @@ namespace Mox.Events
 		{
 			if (!HasValidComponents(components)) return;
 			if (components.Length > 0 && components[0] is IHandleTransitions handler)
-				handler.Unregister(_transitions.Where(tr=>tr.TriggeringEvent && tr.TargetState));
+				handler.Unregister(_transitions.Where(tr => tr.HasTargetAndTrigger));
 			InternalExit(components);
 		}
 		
 		public bool GetTransition(AGameEvent triggerEvent, out Transition transition)
 		{
-			foreach (var item in _transitions)
-			{
-				if (item.TriggeringEvent != triggerEvent) continue;
-				transition = item;
-				return true;
-			}
-
-			transition = null;
-			return false;
+			transition = _transitions.FirstOrDefault(t => t.Has(triggerEvent));
+			return transition != default;
 		}
 
 		protected virtual void InternalEnter(params Component[] components) { }
 		protected virtual void InternalExit(params Component[] components) { }
-		
+
+		#if UNITY_EDITOR
+		private void OnValidate()
+		{
+			foreach (var transition in _transitions)
+			{
+				transition.ReValidate();
+			}
+		}
+		#endif
 	}
 	
 	[System.Obsolete]
