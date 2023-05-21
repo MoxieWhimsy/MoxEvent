@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Mox.Events
@@ -11,6 +12,22 @@ namespace Mox.Events
 		public void Unsubscribe(IReceiveGameEvents receiver)
 			=> UnsubscribeInternal(receiver);
 
+		public static void SubscribeAll(IReceiveGameEvents receiver, params AGameEvent[] gameEvents)
+		{
+			foreach (var gameEvent in gameEvents.Where(e => e))
+			{
+				gameEvent.SubscribeInternal(receiver);
+			}
+		}
+
+		public static void UnsubscribeAll(IReceiveGameEvents receiver, params AGameEvent[] gameEvents)
+		{
+			foreach (var gameEvent in gameEvents.Where(e => e))
+			{
+				gameEvent.UnsubscribeInternal(receiver);
+			}
+		}
+		
 		protected void SubscribeInternal(IReceiveGameEvents receiver)
 		{
 			if (_subscribers.Contains(receiver)) return;
