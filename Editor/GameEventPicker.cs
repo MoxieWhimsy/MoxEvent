@@ -18,7 +18,7 @@ namespace Mox.Events.Editor
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            position = EditorGUI.PrefixLabel(position, label);
+            if (property.depth <= 2) position = EditorGUI.PrefixLabel(position, label);
             var indent = EditorGUI.indentLevel;
             EditorGUI.indentLevel = 0;
             
